@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Photos-to-PDF converter</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <svg class="hero" viewBox="0 0 360 130" role="img" aria-label="Photos turning into one PDF">
+      <defs>
+        <linearGradient id="g" x1="0" x2="1"><stop offset="0" stop-color="#5df2c3"/><stop offset=".5" stop-color="#4cc3ff"/><stop offset="1" stop-color="#8b7bff"/></linearGradient>
+      </defs>
+      <g class="ph p1"><rect x="22" y="30" width="62" height="78" rx="8" fill="#16203a" stroke="#ffffff22"/><path d="M32 92l16-18 12 12 8-8 8 14H32z" fill="#5eead433"/><circle cx="68" cy="50" r="6" fill="#7aa7ff88"/></g>
+      <g class="ph p2"><rect x="46" y="22" width="62" height="78" rx="8" fill="#1b2746" stroke="#ffffff2e"/><path d="M56 84l16-18 12 12 8-8 8 14H56z" fill="#7aa7ff33"/><circle cx="92" cy="42" r="6" fill="#5eead488"/></g>
+      <g class="ph p3"><rect x="70" y="14" width="62" height="78" rx="8" fill="#223056" stroke="#ffffff40"/><path d="M80 76l16-18 12 12 8-8 8 14H80z" fill="#5eead44d"/><circle cx="116" cy="34" r="6" fill="#7aa7ffaa"/></g>
+      <g class="arrow"><path d="M158 62h60M206 48l14 14-14 14" fill="none" stroke="url(#g)" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/></g>
+      <g class="pdf"><rect x="246" y="10" width="86" height="108" rx="10" fill="#fff" fill-opacity=".95"/><path d="M318 10l14 14h-14z" fill="#c9d3ea"/><rect x="258" y="52" width="46" height="5" rx="2.5" fill="#c3cde4"/><rect x="258" y="64" width="62" height="5" rx="2.5" fill="#d7deef"/><rect x="258" y="76" width="54" height="5" rx="2.5" fill="#d7deef"/><rect x="258" y="26" width="34" height="16" rx="4" fill="url(#g)"/><text x="275" y="38" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" font-weight="700" fill="#06101c">PDF</text></g>
+    </svg>
+    <h1><span>Photos-to-PDF</span> converter</h1>
+    <p>Turn several photos of notes into one PDF for submission. It also detects text, Word, PowerPoint, Excel, and PDF files and converts them to PDF, Word, PowerPoint, and more. Everything runs on your device, so your files are never uploaded.</p>
+    <ol class="steps" aria-label="Steps">
+      <li data-s="1"><i>1</i>Add files</li>
+      <li data-s="2"><i>2</i>Arrange pages</li>
+      <li data-s="3"><i>3</i>Download</li>
+    </ol>
+  </header>
+
+  <div id="drop" tabindex="0" role="button" aria-label="Choose photos">
+    <strong>Tap to choose files, or drop them here</strong>
+    <small>Photos, text, Word, PowerPoint, Excel, or PDF. The website finds the file type by itself.</small>
+  </div>
+  <input id="file" type="file" multiple hidden>
+
+  <section class="panel" id="panel">
+    <div class="opts">
+      <div><label for="per">Photos per page</label>
+        <select id="per">
+          <option value="1">1 photo (full page)</option>
+          <option value="2">2 photos</option>
+          <option value="4">4 photos</option>
+          <option value="6">6 photos</option>
+        </select></div>
+      <div><label for="size">Paper size</label>
+        <select id="size">
+          <option value="612,792">Short bond (8.5 × 11 in)</option>
+          <option value="595.28,841.89">A4</option>
+          <option value="612,936">Long bond (8.5 × 13 in)</option>
+        </select></div>
+      <div><label for="orient">Page direction</label>
+        <select id="orient">
+          <option value="auto">Match each photo</option>
+          <option value="p">Always portrait</option>
+          <option value="l">Always landscape</option>
+        </select></div>
+      <div><label for="margin">Margin</label>
+        <select id="margin">
+          <option value="0">None (full page)</option>
+          <option value="18" selected>Small</option>
+          <option value="36">Normal</option>
+        </select></div>
+      <div><label for="qual">Quality</label>
+        <select id="qual">
+          <option value="0.92">High (bigger file)</option>
+          <option value="0.8" selected>Balanced</option>
+          <option value="0.6">Small file</option>
+        </select></div>
+      <div><label for="name">File name</label>
+        <input id="name" type="text" value="my-notes"></div>
+    </div>
+  </section>
+
+  <ul id="grid" aria-label="Photos in page order"></ul>
+
+  <section id="docsec" class="docsec" hidden>
+    <div class="dhead"><h2>Other files</h2><div class="dsz"><label for="dsize">Paper size for PDF</label><select id="dsize"><option value="612,792">Short bond (8.5 × 11 in)</option><option value="595.28,841.89">A4</option><option value="612,936">Long bond (8.5 × 13 in)</option></select></div></div>
+    <ul id="docs"></ul>
+  </section>
+
+  <section id="ocrsec" class="docsec" hidden>
+    <div class="dhead"><h2>Words found in the photos</h2><div class="dsz"><label for="ocrlang">Language of the words</label><select id="ocrlang"><option value="eng">English</option><option value="fil">Filipino</option><option value="eng+fil">English and Filipino</option></select></div></div>
+    <textarea id="ocrtext" rows="10" placeholder="The words from your photos will appear here. You can fix any mistakes before converting." aria-label="Words found in the photos"></textarea>
+    <div class="dact"><label for="ocrt">Convert to</label><select id="ocrt" class="dt"><option value="pdf">PDF (.pdf)</option><option value="docx">Word (.docx)</option><option value="pptx">PowerPoint (.pptx)</option><option value="txt">Text (.txt)</option></select><button class="btn go" id="ocrgo">Convert</button></div>
+    <div class="dmsg" id="ocrmsg"></div>
+  </section>
+
+  <div class="actions" id="actions" hidden>
+    <button class="btn" id="make">Make PDF</button>
+    <button class="btn ghost" id="ocr" style="display:none">Read words from photos</button>
+    <button class="btn ghost" id="makeppt" style="display:none">Make PowerPoint from photos</button>
+    <button class="btn ghost" id="all" style="display:none">Convert all documents</button>
+    <button class="btn ghost" id="add">Add more files</button>
+    <button class="btn ghost" id="clear">Clear all</button>
+    <span id="count" class="chip"></span>
+    <span id="status" role="status" aria-live="polite"></span>
+  </div>
+
+  <ul class="help">
+    <li>Choose any file. The website detects if it is a photo, text, Word, PowerPoint, Excel, or PDF file.</li>
+    <li>Photos: type a caption, change the order, turn them, then choose how many photos per page and click Make PDF.</li>
+    <li>Photos with words: click Read words from photos. The website reads the words, you can fix them, then convert them to PDF, Word, PowerPoint, or Text. This needs an internet connection.</li>
+    <li>Other files: choose what to convert to (for example Word to PDF, PowerPoint to PDF, text to Word) and click Convert.</li>
+    <li>Old .doc, .ppt and .xls files are not supported. Save them as .docx, .pptx or .xlsx first.</li>
+  </ul>
+  <p class="foot">Made for easy note submissions. Your photos never leave your device.</p>
+</div>
+
+<script src="jszip.min.js"></script>
+<script src="pdf-lib.min.js"></script>
+<script src="pptxgen.bundle.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
